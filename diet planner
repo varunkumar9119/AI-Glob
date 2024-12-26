@@ -1,0 +1,116 @@
+import json
+
+class DietPlanner:
+    def __init__(self):
+        self.daily_goals = {'calories': 0, 'protein': 0, 'fats': 0, 'carbs': 0}
+        self.total_intake = {'calories': 0, 'protein': 0, 'fats': 0, 'carbs': 0}
+        self.food_items = []
+
+    def set_daily_goals(self):
+        """Set daily goals for calories, protein, fats, and carbs."""
+        print("Set your daily goals:")
+        self.daily_goals['calories'] = int(input("Enter your daily calorie goal: "))
+        self.daily_goals['protein'] = int(input("Enter your daily protein goal (g): "))
+        self.daily_goals['fats'] = int(input("Enter your daily fats goal (g): "))
+        self.daily_goals['carbs'] = int(input("Enter your daily carbs goal (g): "))
+        print(f"Your daily goals have been set: {self.daily_goals}")
+
+    def add_food_item(self):
+        """Allow user to add food item with its nutritional information."""
+        food_name = input("Enter food name: ")
+        calories = int(input(f"Enter calories for {food_name}: "))
+        protein = int(input(f"Enter protein content for {food_name} (in grams): "))
+        fats = int(input(f"Enter fats content for {food_name} (in grams): "))
+        carbs = int(input(f"Enter carbs content for {food_name} (in grams): "))
+
+        food = {
+            'name': food_name,
+            'calories': calories,
+            'protein': protein,
+            'fats': fats,
+            'carbs': carbs
+        }
+
+        self.food_items.append(food)
+        self.total_intake['calories'] += calories
+        self.total_intake['protein'] += protein
+        self.total_intake['fats'] += fats
+        self.total_intake['carbs'] += carbs
+
+        print(f"{food_name} added to your food log!")
+
+    def check_progress(self):
+        """Check if the user has exceeded or is on track with their goals."""
+        print("\n--- Progress Check ---")
+        for key in self.daily_goals:
+            if self.total_intake[key] > self.daily_goals[key]:
+                print(f"You've exceeded your {key} goal by {self.total_intake[key] - self.daily_goals[key]}.")
+            else:
+                print(f"You have {self.daily_goals[key] - self.total_intake[key]} {key} remaining for today.")
+
+    def display_food_log(self):
+        """Display all food items added, along with their nutritional content."""
+        print("\n--- Food Log ---")
+        for food in self.food_items:
+            print(f"{food['name']} - Calories: {food['calories']}, Protein: {food['protein']}g, Fats: {food['fats']}g, Carbs: {food['carbs']}g")
+        print(f"\nTotal Intake - Calories: {self.total_intake['calories']}, Protein: {self.total_intake['protein']}g, Fats: {self.total_intake['fats']}g, Carbs: {self.total_intake['carbs']}g")
+
+    def save_data(self):
+        """Save the user's food log and goals to a file."""
+        data = {
+            'daily_goals': self.daily_goals,
+            'food_items': self.food_items,
+            'total_intake': self.total_intake
+        }
+        with open('diet_planner_data.json', 'w') as f:
+            json.dump(data, f)
+        print("Your data has been saved!")
+
+    def load_data(self):
+        """Load the user's food log and goals from a file."""
+        try:
+            with open('diet_planner_data.json', 'r') as f:
+                data = json.load(f)
+            self.daily_goals = data['daily_goals']
+            self.food_items = data['food_items']
+            self.total_intake = data['total_intake']
+            print("Your data has been loaded!")
+        except FileNotFoundError:
+            print("No saved data found. Start with setting your goals.")
+
+def main():
+    diet_planner = DietPlanner()
+
+    # Load saved data if available
+    diet_planner.load_data()
+
+    # Set daily goals
+    diet_planner.set_daily_goals()
+
+    # Loop to add food items and check progress
+    while True:
+        print("\nOptions:")
+        print("1. Add food item")
+        print("2. Check progress")
+        print("3. View food log")
+        print("4. Save data")
+        print("5. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            diet_planner.add_food_item()
+        elif choice == "2":
+            diet_planner.check_progress()
+        elif choice == "3":
+            diet_planner.display_food_log()
+        elif choice == "4":
+            diet_planner.save_data()
+        elif choice == "5":
+            print("Exiting the Diet Planner. Stay healthy!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
