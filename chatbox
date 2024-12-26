@@ -1,0 +1,117 @@
+import random
+
+# Dictionary containing questions and answers related to the college
+qa_pairs = {
+    "What is the college name?":
+    "The college name is Gokaraju Rangaraju Institute of Engineering and Technology.",
+    "What courses does the college offer?":
+    "We offer a variety of courses, including Computer Science, Mechanical Engineering, Civil Engineering, and Business Administration.",
+    "What is the admission process?":
+    "The admission process involves an entrance exam, followed by an interview. You can find more details on the official website.",
+    "What is the college's location?":
+    "The college is located in Hyderabad, Telangana, at 1-4-15/2, Gokaraju Rangaraju Avenue, Nizampet.",
+    "What are the hostel facilities like?":
+    "We have separate hostels for boys and girls, with 24/7 security and all the necessary amenities.",
+    "What is the college fee structure?":
+    "The fee structure depends on the course, but generally, it ranges from ₹50,000 to ₹1,00,000 per year.",
+    "What extracurricular activities are available?":
+    "The college offers sports, cultural events, tech fests, and more. You can join clubs like music, drama, debate, etc.",
+    "How do I contact the college administration?":
+    "You can contact the administration by visiting the college website and using the contact form or emailing admin@griet.ac.in.",
+    "What is the college's ranking?":
+    "Gokaraju Rangaraju Institute of Engineering and Technology is ranked among the top engineering colleges in Telangana.",
+    "What is the college's library like?":
+    "The college library is well-equipped with thousands of books, journals, and digital resources. It has reading rooms and is open seven days a week."
+}
+
+# Additional responses
+help_text = """
+You can ask me about:
+- College name
+- Admission process
+- Courses offered
+- College location
+- Hostel facilities
+- Fee structure
+- Extracurricular activities
+- Contacting the administration
+- College ranking
+- Library facilities
+Type 'exit' to end the chat.
+"""
+
+feedback_responses = [
+    "Thank you for your feedback!", "We appreciate your response!",
+    "Thanks for sharing your thoughts!"
+]
+
+
+def chatbot_response(user_input):
+    """Function to get response from the chatbot"""
+    # Check if the user's input is in the question-answer pairs
+    for question, answer in qa_pairs.items():
+        if user_input.lower() in question.lower():
+            return random.choice([answer])  # Return the corresponding answer
+    return "Sorry, I don't have an answer to that. Can you ask something else?"
+
+
+def handle_feedback():
+    """Handle user feedback"""
+    print("Please rate the chatbot's response (1-5):")
+    rating = input("Rating: ")
+    if rating.isdigit() and 1 <= int(rating) <= 5:
+        print(random.choice(feedback_responses))
+    else:
+        print("Invalid rating. Please provide a rating between 1 and 5.")
+
+
+def show_help():
+    """Display help text for the chatbot"""
+    print(help_text)
+
+
+def main():
+    print(
+        "Welcome to the Gokaraju Rangaraju Institute of Engineering and Technology Chatbot! How can I assist you today?"
+    )
+
+    while True:
+        user_input = input("You: ")
+
+        # Exit condition
+        if user_input.lower() == 'exit':
+            print("Goodbye! Have a nice day!")
+            break
+
+        # Help command
+        elif user_input.lower() == 'help':
+            show_help()
+            continue
+
+        # Respond to queries
+        response = chatbot_response(user_input)
+        print("Bot:", response)
+
+        # Ask if the user has another question
+        print("Do you have any other questions? (yes/no)")
+        next_question = input("You: ").lower()
+
+        if next_question == 'no':
+            # If no more questions, ask for feedback
+            print(
+                "Would you like to provide feedback on this response? (yes/no)"
+            )
+            feedback = input("Feedback: ").lower()
+
+            if feedback == 'yes':
+                handle_feedback()
+            print("Goodbye! Have a nice day!")
+            break
+        elif next_question != 'yes':
+            print(
+                "Sorry, I didn't understand. Please answer with 'yes' or 'no'."
+            )
+
+
+if __name__ == "__main__":
+    main()
